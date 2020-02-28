@@ -1,6 +1,10 @@
 import React from 'react';
 
 class Grid extends React.Component {
+    columnHeader(caption) {
+        return (<th>{caption}</th>);
+    }
+
     render() {
         const { data } = this.props;
 
@@ -12,7 +16,7 @@ class Grid extends React.Component {
 
         const firstRow = data[0];
         const columnCaptions = Object.keys(firstRow);
-        const columns = columnCaptions.map(x => (<th>{x}</th>));
+        const columns = columnCaptions.map(this.columnHeader);
 
         const rows = data.map(row => {
             const cells = columnCaptions.map(column => (<td>{row[column]}</td>));
