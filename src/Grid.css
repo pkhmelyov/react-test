@@ -1,9 +1,9 @@
 .Grid th .sort-asc::before {
-    content: "↑";
+    content: "↓";
     font-size: 20px;
 }
 
 .Grid th .sort-desc::before {
-    content: "↓";
+    content: "↑";
     font-size: 20px;
 }
