@@ -14,10 +14,15 @@ class Grid extends React.Component {
         const columnCaptions = Object.keys(firstRow);
         const columns = columnCaptions.map(x => (<th>{x}</th>));
 
+        const rows = data.map(row => {
+            const cells = columnCaptions.map(column => (<td>{row[column]}</td>));
+            return (<tr>{cells}</tr>);
+        });
+
         return (
             <table>
                 <tr>{columns}</tr>
-                <tr><td>Тут должны строки с данными</td></tr>
+                {rows}
             </table>
         );
     }
