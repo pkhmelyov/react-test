@@ -1,8 +1,18 @@
 import React from 'react';
 
 class Grid extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.columnHeader = this.columnHeader.bind(this);
+    }
+
+    onColumnHeaderClick(e) {
+        alert(e.target.innerText);
+    }
+
     columnHeader(caption) {
-        return (<th>{caption}</th>);
+        return (<th onClick={this.onColumnHeaderClick}>{caption}</th>);
     }
 
     render() {
