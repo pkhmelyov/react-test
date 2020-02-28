@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './Grid.css';
+
 class Grid extends React.Component {
     constructor(props) {
         super(props);
@@ -30,8 +32,15 @@ class Grid extends React.Component {
         this.toggleSorting(e.target.innerText)
     }
 
+    sortingIndicator(caption) {
+        const { column, asc } = this.state.sorting;
+        if(column === caption) {
+            return (<span className={asc ? "sort-asc" : "sort-desc"}></span>)
+        }
+    }
+
     columnHeader(caption) {
-        return (<th onClick={this.onColumnHeaderClick}>{caption}</th>);
+        return (<th onClick={this.onColumnHeaderClick}>{caption}{this.sortingIndicator(caption)}</th>);
     }
 
     render() {
@@ -53,7 +62,7 @@ class Grid extends React.Component {
         });
 
         return (
-            <table>
+            <table className={"Grid"}>
                 <tr>{columns}</tr>
                 {rows}
             </table>
