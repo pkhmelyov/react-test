@@ -11,7 +11,10 @@ class Grid extends React.Component {
         }
 
         return (
-            <div>Здесь будет табличка</div>
+            <table>
+                <tr><th>Тут должны быть колонки для каждого поля в строке</th></tr>
+                <tr><td>Тут должны строки с данными</td></tr>
+            </table>
         );
     }
 }
