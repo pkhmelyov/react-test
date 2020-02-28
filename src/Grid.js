@@ -32,6 +32,29 @@ class Grid extends React.Component {
         this.toggleSorting(e.target.innerText)
     }
 
+    getSortedRows() {
+        const sorting = { ...this.state.sorting };
+        if(sorting.column) {
+            const result = [ ...this.props.data ];
+            result.sort((row1, row2) => {
+                const x = row1[sorting.column];
+                const y = row2[sorting.column];
+                if(x === y) {
+                    return 0;
+                } else {
+                    if(x < y) {
+                        return sorting.asc ? -1 : 1;
+                    } else {
+                        return sorting.asc ? 1 : -1;
+                    }
+                }
+            });
+            return result;
+        } else {
+            return [ ...this.props.data ];
+        }
+    }
+
     sortingIndicator(caption) {
         const { column, asc } = this.state.sorting;
         if(column === caption) {
@@ -44,7 +67,7 @@ class Grid extends React.Component {
     }
 
     render() {
-        const { data } = this.props;
+        const data = this.getSortedRows();
 
         if(!(data && data.length)) {
             return (
