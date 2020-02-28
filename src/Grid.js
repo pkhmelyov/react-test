@@ -10,9 +10,13 @@ class Grid extends React.Component {
             );
         }
 
+        const firstRow = data[0];
+        const columnCaptions = Object.keys(firstRow);
+        const columns = columnCaptions.map(x => (<th>{x}</th>));
+
         return (
             <table>
-                <tr><th>Тут должны быть колонки для каждого поля в строке</th></tr>
+                <tr>{columns}</tr>
                 <tr><td>Тут должны строки с данными</td></tr>
             </table>
         );
