@@ -8,8 +8,19 @@ class Grid extends React.Component {
 
         this.columnHeader = this.columnHeader.bind(this);
         this.onColumnHeaderClick = this.onColumnHeaderClick.bind(this);
+        this.onPagingBackClick = this.onPagingBackClick.bind(this);
+        this.onPagingForwardClick = this.onPagingForwardClick.bind(this);
 
-        this.state = { sorting: { column: '', asc: true } };
+        this.state = {
+            sorting: {
+                column: '',
+                asc: true
+            },
+            paging: {
+                size: 50,
+                page: 1
+            }
+        };
     }
 
     toggleSorting(column) {
@@ -33,9 +44,9 @@ class Grid extends React.Component {
     }
 
     getSortedRows() {
+        const result = [ ...this.props.data ];
         const sorting = { ...this.state.sorting };
         if(sorting.column) {
-            const result = [ ...this.props.data ];
             result.sort((row1, row2) => {
                 const x = row1[sorting.column];
                 const y = row2[sorting.column];
@@ -49,10 +60,16 @@ class Grid extends React.Component {
                     }
                 }
             });
-            return result;
-        } else {
-            return [ ...this.props.data ];
         }
+        return result;
+    }
+
+    getPagedRoles() {
+        const { page, size } = this.state.paging;
+        const data = this.getSortedRows();
+        const start = (page - 1) * size;
+        const end = page * size;
+        return data.slice(start, end);
     }
 
     sortingIndicator(caption) {
@@ -66,8 +83,39 @@ class Grid extends React.Component {
         return (<th onClick={this.onColumnHeaderClick}>{caption}{this.sortingIndicator(caption)}</th>);
     }
 
+    totalCount() {
+        return this.props.data.length;
+    }
+
+    onPagingBackClick() {
+        const paging = { ...this.state.paging };
+        if(paging.page === 1) return;
+        paging.page--;
+        this.setState({ paging });
+    }
+
+    onPagingForwardClick() {
+        const paging = { ...this.state.paging };
+        if(paging.page * paging.size >= this.totalCount()) return;
+        paging.page++;
+        this.setState({ paging });
+    }
+
+    pager() {
+        const paging = { ...this.state.paging };
+        const rowsCount = this.totalCount();
+        const pagesCount = Math.ceil(rowsCount / paging.size);
+        return pagesCount > 1 && (
+            <div>
+                <span onClick={this.onPagingBackClick}>←</span>
+                Page {paging.page} of {pagesCount}
+                <span onClick={this.onPagingForwardClick}>→</span>
+            </div>
+        );
+    }
+
     render() {
-        const data = this.getSortedRows();
+        const data = this.getPagedRoles();//this.getSortedRows();
 
         if(!(data && data.length)) {
             return (
@@ -85,10 +133,13 @@ class Grid extends React.Component {
         });
 
         return (
-            <table className={"Grid"}>
-                <tr>{columns}</tr>
-                {rows}
-            </table>
+            <div className={"Grid"}>
+                <table>
+                    <tr>{columns}</tr>
+                    {rows}
+                </table>
+                {this.pager()}
+            </div>
         );
     }
 }
