@@ -9,6 +9,8 @@ class Grid extends React.Component {
         this.onColumnHeaderClick = this.onColumnHeaderClick.bind(this);
         this.onPagingBackClick = this.onPagingBackClick.bind(this);
         this.onPagingForwardClick = this.onPagingForwardClick.bind(this);
+        this.onFilterInputChange = this.onFilterInputChange.bind(this);
+        this.onFilterButtonClick = this.onFilterButtonClick.bind(this);
 
         this.state = {
             sorting: {
@@ -16,8 +18,11 @@ class Grid extends React.Component {
                 asc: true
             },
             paging: {
-                size: 50,
+                size: 5,
                 page: 1
+            },
+            filter: {
+                searchTerm: ''
             }
         };
     }
@@ -42,8 +47,17 @@ class Grid extends React.Component {
         return () => this.toggleSorting(key);
     }
 
+    getFilteredRows() {
+        let filteredRows = this.state.filteredRows;
+        if(!filteredRows) {
+            filteredRows = [ ...this.props.data ];
+            this.setState({ filteredRows });
+        }
+        return filteredRows;
+    }
+
     getSortedRows() {
-        const result = [ ...this.props.data ];
+        const result = this.getFilteredRows();
         const sorting = { ...this.state.sorting };
         if(sorting.column) {
             result.sort((row1, row2) => {
@@ -63,7 +77,7 @@ class Grid extends React.Component {
         return result;
     }
 
-    getPagedRoles() {
+    getPagedRows() {
         const { page, size } = this.state.paging;
         const data = this.getSortedRows();
         const start = (page - 1) * size;
@@ -87,7 +101,7 @@ class Grid extends React.Component {
     }
 
     totalCount() {
-        return this.props.data.length;
+        return this.getFilteredRows().length;
     }
 
     onPagingBackClick() {
@@ -104,6 +118,35 @@ class Grid extends React.Component {
         this.setState({ paging });
     }
 
+    onFilterInputChange(e) {
+        const filter = { ...this.state.filter };
+        filter.searchTerm = e.target.value;
+        this.setState({ filter });
+    }
+
+    onFilterButtonClick() {
+        const { searchTerm } = this.state.filter;
+        const data = [ ...this.props.data ];
+        let filteredRows;
+        if(!searchTerm) {
+            filteredRows = data;
+        } else {
+            const exp = new RegExp(searchTerm, "i");
+            const columnKeys = this.props.columns.map(x => x.key);
+            filteredRows = data.filter(x => columnKeys.some(key => exp.test(x[key])));
+        }
+        this.setState({ filteredRows, paging: { ...this.state.paging, page: 1 } });
+    }
+
+    filter() {
+        return (
+            <div>
+                <input type="text" value={this.state.filter.searchTerm} onChange={this.onFilterInputChange} />
+                <button onClick={this.onFilterButtonClick}>Найти</button>
+            </div>
+        );
+    }
+
     pager() {
         const paging = { ...this.state.paging };
         const rowsCount = this.totalCount();
@@ -118,13 +161,7 @@ class Grid extends React.Component {
     }
 
     render() {
-        const data = this.getPagedRoles();
-
-        if(!(data && data.length)) {
-            return (
-                <div>Нет данных...</div>
-            );
-        }
+        const data = this.getPagedRows();
 
         const rows = data.map(row => {
             const cells = this.props.columns.map(column => (<td>{row[column.key]}</td>));
@@ -133,6 +170,7 @@ class Grid extends React.Component {
 
         return (
             <div className={"Grid"}>
+                {this.filter()}
                 <table>
                     <tr>{this.columnHeaders()}</tr>
                     {rows}
