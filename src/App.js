@@ -262,7 +262,14 @@ function App() {
       description: "libero sollicitudin dolor ante tempor vel lacus nec dolor mattis lacus vel lectus tincidunt sollicitudin nullam ac elementum magna mi sed libero mattis nec tellus nec placerat malesuada consequat dolor nec rutrum"
     }
   ];
-  return (<Grid data={ sampleData }/>);
+  const columns = [
+    { key: 'id', text: '№' },
+    { key: 'firstName', text: 'Имя' },
+    { key: 'lastName', text: 'Фамилия' },
+    { key: 'email', text: 'Email' },
+    { key: 'phone', text: 'Телефон' }
+  ];
+  return (<Grid columns={columns} data={ sampleData }/>);
 }
 
 export default App;
