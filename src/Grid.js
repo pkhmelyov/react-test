@@ -108,14 +108,14 @@ class Grid extends React.Component {
         return pagesCount > 1 && (
             <div>
                 <span onClick={this.onPagingBackClick}>←</span>
-                Page {paging.page} of {pagesCount}
+                Страница {paging.page} из {pagesCount}
                 <span onClick={this.onPagingForwardClick}>→</span>
             </div>
         );
     }
 
     render() {
-        const data = this.getPagedRoles();//this.getSortedRows();
+        const data = this.getPagedRoles();
 
         if(!(data && data.length)) {
             return (
