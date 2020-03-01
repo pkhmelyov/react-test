@@ -6,7 +6,6 @@ class Grid extends React.Component {
     constructor(props) {
         super(props);
 
-        this.columnHeader = this.columnHeader.bind(this);
         this.onColumnHeaderClick = this.onColumnHeaderClick.bind(this);
         this.onPagingBackClick = this.onPagingBackClick.bind(this);
         this.onPagingForwardClick = this.onPagingForwardClick.bind(this);
@@ -39,8 +38,8 @@ class Grid extends React.Component {
         this.setState({ sorting });
     }
 
-    onColumnHeaderClick(e) {
-        this.toggleSorting(e.target.innerText)
+    onColumnHeaderClick(key) {
+        return () => this.toggleSorting(key);
     }
 
     getSortedRows() {
@@ -79,8 +78,12 @@ class Grid extends React.Component {
         }
     }
 
-    columnHeader(caption) {
-        return (<th onClick={this.onColumnHeaderClick}>{caption}{this.sortingIndicator(caption)}</th>);
+    columnHeaders() {
+        return this.props.columns.map(column => (
+            <th onClick={this.onColumnHeaderClick(column.key)}>
+                {column.text}{this.sortingIndicator(column.key)}
+            </th>
+        ));
     }
 
     totalCount() {
@@ -123,19 +126,15 @@ class Grid extends React.Component {
             );
         }
 
-        const firstRow = data[0];
-        const columnCaptions = Object.keys(firstRow);
-        const columns = columnCaptions.map(this.columnHeader);
-
         const rows = data.map(row => {
-            const cells = columnCaptions.map(column => (<td>{row[column]}</td>));
+            const cells = this.props.columns.map(column => (<td>{row[column.key]}</td>));
             return (<tr>{cells}</tr>);
         });
 
         return (
             <div className={"Grid"}>
                 <table>
-                    <tr>{columns}</tr>
+                    <tr>{this.columnHeaders()}</tr>
                     {rows}
                 </table>
                 {this.pager()}
