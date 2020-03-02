@@ -160,7 +160,7 @@ class Grid extends React.Component {
         );
     }
 
-    render() {
+    rows() {
         const data = this.getPagedRows();
 
         const rows = data.map(row => {
@@ -168,12 +168,16 @@ class Grid extends React.Component {
             return (<tr>{cells}</tr>);
         });
 
+        return rows;
+    }
+
+    render() {
         return (
             <div className={"Grid"}>
                 {this.filter()}
                 <table>
                     <tr>{this.columnHeaders()}</tr>
-                    {rows}
+                    {this.rows()}
                 </table>
                 {this.pager()}
             </div>
