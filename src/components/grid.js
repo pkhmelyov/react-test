@@ -2,6 +2,7 @@ import React from 'react';
 
 import TableHead from './tableHead';
 import TableBody from './tableBody';
+import Pager from './pager';
 
 class Grid extends React.Component {
     constructor(props) {
@@ -134,19 +135,6 @@ class Grid extends React.Component {
         );
     }
 
-    pager() {
-        const paging = { ...this.state.paging };
-        const rowsCount = this.totalCount();
-        const pagesCount = Math.ceil(rowsCount / paging.size);
-        return pagesCount > 1 && (
-            <div>
-                <span onClick={this.onPagingBackClick}>←</span>
-                Страница {paging.page} из {pagesCount}
-                <span onClick={this.onPagingForwardClick}>→</span>
-            </div>
-        );
-    }
-
     onRowClick(item) {
         return () => {
             this.setState({ selectedItem: item });
@@ -181,7 +169,11 @@ class Grid extends React.Component {
                     <TableHead columns={columns} sortingState={this.state.sorting} onColumnHeaderClick={this.onColumnHeaderClick} />
                     <TableBody items={this.getPagedRows()} columns={columns} onRowClick={this.onRowClick} />
                 </table>
-                {this.pager()}
+                <Pager
+                    totalItemsCount={this.totalCount()}
+                    pagingState={this.state.paging}
+                    onPagingBackClick={this.onPagingBackClick}
+                    onPagingForwardClick={this.onPagingForwardClick} />
                 {this.itemDetails()}
             </div>
         );
