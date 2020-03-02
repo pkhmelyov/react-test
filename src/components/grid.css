@@ -1,7 +1,0 @@
-.Grid th .sort-asc::before {
-    content: "↓";
-}
-
-.Grid th .sort-desc::before {
-    content: "↑";
-}

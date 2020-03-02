@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './grid.css';
+import SortingIndicator from './sortingIndicator';
 
 class Grid extends React.Component {
     constructor(props) {
@@ -85,17 +85,11 @@ class Grid extends React.Component {
         return data.slice(start, end);
     }
 
-    sortingIndicator(caption) {
-        const { column, asc } = this.state.sorting;
-        if(column === caption) {
-            return (<span className={asc ? "sort-asc" : "sort-desc"}></span>)
-        }
-    }
-
     columnHeaders() {
         return this.props.columns.map(column => (
             <th onClick={this.onColumnHeaderClick(column.key)}>
-                {column.text}{this.sortingIndicator(column.key)}
+                {column.text}
+                <SortingIndicator columnKey={column.key} sortingState={this.state.sorting} />
             </th>
         ));
     }

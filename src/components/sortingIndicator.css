@@ -1,0 +1,7 @@
+.sorting-indicator.sort-asc::before {
+    content: "↓";
+}
+
+.sorting-indicator.sort-desc::before {
+    content: "↑";
+}
