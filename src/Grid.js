@@ -165,10 +165,16 @@ class Grid extends React.Component {
 
         const rows = data.map(row => {
             const cells = this.props.columns.map(column => (<td>{row[column.key]}</td>));
-            return (<tr>{cells}</tr>);
+            return (<tr onClick={this.onRowClick(row)}>{cells}</tr>);
         });
 
         return rows;
+    }
+
+    onRowClick(item) {
+        return () => {
+            this.setState({ selectedItem: item });
+        };
     }
 
     render() {
