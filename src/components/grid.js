@@ -1,6 +1,6 @@
 import React from 'react';
 
-import ColumnHeader from './columnHeader';
+import TableHead from './tableHead';
 
 class Grid extends React.Component {
     constructor(props) {
@@ -83,12 +83,6 @@ class Grid extends React.Component {
         const start = (page - 1) * size;
         const end = page * size;
         return data.slice(start, end);
-    }
-
-    columnHeaders() {
-        return this.props.columns.map(column => (
-            <ColumnHeader key={column.key} definition={column} sortingState={this.state.sorting} onClick={this.onColumnHeaderClick} />
-        ));
     }
 
     totalCount() {
@@ -192,7 +186,7 @@ class Grid extends React.Component {
             <div className={"Grid"}>
                 {this.filter()}
                 <table>
-                    <tr>{this.columnHeaders()}</tr>
+                    <TableHead columns={this.props.columns} sortingState={this.state.sorting} onColumnHeaderClick={this.onColumnHeaderClick} />
                     {this.rows()}
                 </table>
                 {this.pager()}
