@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SortingIndicator from './sortingIndicator';
+import ColumnHeader from './columnHeader';
 
 class Grid extends React.Component {
     constructor(props) {
@@ -87,10 +87,7 @@ class Grid extends React.Component {
 
     columnHeaders() {
         return this.props.columns.map(column => (
-            <th onClick={this.onColumnHeaderClick(column.key)}>
-                {column.text}
-                <SortingIndicator columnKey={column.key} sortingState={this.state.sorting} />
-            </th>
+            <ColumnHeader key={column.key} definition={column} sortingState={this.state.sorting} onClick={this.onColumnHeaderClick} />
         ));
     }
 

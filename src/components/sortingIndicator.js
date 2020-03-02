@@ -6,7 +6,7 @@ function SortingIndicator({ columnKey, sortingState }) {
     const { column, asc } = sortingState;
     if (columnKey === column) {
         return (
-            <span className={`sorting-indicator ${asc ? "sort-asc" : "sort-desc"}`}></span>
+            <span className={`sorting-indicator ${asc ? 'sort-asc' : 'sort-desc'}`}></span>
         );
     }
     return null;
