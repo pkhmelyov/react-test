@@ -1,12 +1,14 @@
 import React from 'react';
 
 import TableHead from './tableHead';
+import TableBody from './tableBody';
 
 class Grid extends React.Component {
     constructor(props) {
         super(props);
 
         this.onColumnHeaderClick = this.onColumnHeaderClick.bind(this);
+        this.onRowClick = this.onRowClick.bind(this);
         this.onPagingBackClick = this.onPagingBackClick.bind(this);
         this.onPagingForwardClick = this.onPagingForwardClick.bind(this);
         this.onFilterInputChange = this.onFilterInputChange.bind(this);
@@ -145,17 +147,6 @@ class Grid extends React.Component {
         );
     }
 
-    rows() {
-        const data = this.getPagedRows();
-
-        const rows = data.map(row => {
-            const cells = this.props.columns.map(column => (<td>{row[column.key]}</td>));
-            return (<tr onClick={this.onRowClick(row)}>{cells}</tr>);
-        });
-
-        return rows;
-    }
-
     onRowClick(item) {
         return () => {
             this.setState({ selectedItem: item });
@@ -182,12 +173,13 @@ class Grid extends React.Component {
     }
 
     render() {
+        const { columns } = this.props;
         return (
-            <div className={"Grid"}>
+            <div>
                 {this.filter()}
                 <table>
-                    <TableHead columns={this.props.columns} sortingState={this.state.sorting} onColumnHeaderClick={this.onColumnHeaderClick} />
-                    {this.rows()}
+                    <TableHead columns={columns} sortingState={this.state.sorting} onColumnHeaderClick={this.onColumnHeaderClick} />
+                    <TableBody items={this.getPagedRows()} columns={columns} onRowClick={this.onRowClick} />
                 </table>
                 {this.pager()}
                 {this.itemDetails()}
