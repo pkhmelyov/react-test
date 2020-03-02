@@ -53,7 +53,7 @@ class Grid extends React.Component {
             filteredRows = [ ...this.props.data ];
             this.setState({ filteredRows });
         }
-        return filteredRows;
+        return [ ...filteredRows ];
     }
 
     getSortedRows() {
