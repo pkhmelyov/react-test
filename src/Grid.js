@@ -177,6 +177,25 @@ class Grid extends React.Component {
         };
     }
 
+    itemDetails() {
+        const selectedItem = this.state.selectedItem;
+        if(selectedItem){
+            return (
+                <div>
+                Выбран пользователь <b>{selectedItem.firstName} {selectedItem.lastName}</b><br />
+                Описание:<br />
+                <textarea>
+                {selectedItem.description}
+                </textarea><br />
+                Адрес проживания: <b>{selectedItem.address.streetAddress}</b><br />
+                Город: <b>{selectedItem.address.city}</b><br />
+                Провинция/штат: <b>{selectedItem.address.state}</b><br />
+                Индекс: <b>{selectedItem.address.zip}</b>
+            </div>
+            );
+        }
+    }
+
     render() {
         return (
             <div className={"Grid"}>
@@ -186,6 +205,7 @@ class Grid extends React.Component {
                     {this.rows()}
                 </table>
                 {this.pager()}
+                {this.itemDetails()}
             </div>
         );
     }
