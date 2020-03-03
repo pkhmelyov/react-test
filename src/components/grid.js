@@ -3,6 +3,7 @@ import React from 'react';
 import TableHead from './tableHead';
 import TableBody from './tableBody';
 import Pager from './pager';
+import SearchPanel from './searchPanel';
 
 class Grid extends React.Component {
     constructor(props) {
@@ -12,8 +13,8 @@ class Grid extends React.Component {
         this.onRowClick = this.onRowClick.bind(this);
         this.onPagingBackClick = this.onPagingBackClick.bind(this);
         this.onPagingForwardClick = this.onPagingForwardClick.bind(this);
-        this.onFilterInputChange = this.onFilterInputChange.bind(this);
-        this.onFilterButtonClick = this.onFilterButtonClick.bind(this);
+        this.onSearchInputChange = this.onSearchInputChange.bind(this);
+        this.onSearchButtonClick = this.onSearchButtonClick.bind(this);
 
         this.state = {
             sorting: {
@@ -106,13 +107,13 @@ class Grid extends React.Component {
         this.setState({ paging });
     }
 
-    onFilterInputChange(e) {
+    onSearchInputChange(e) {
         const filter = { ...this.state.filter };
         filter.searchTerm = e.target.value;
         this.setState({ filter });
     }
 
-    onFilterButtonClick() {
+    onSearchButtonClick() {
         const { searchTerm } = this.state.filter;
         const data = [ ...this.props.data ];
         let filteredRows;
@@ -124,15 +125,6 @@ class Grid extends React.Component {
             filteredRows = data.filter(x => columnKeys.some(key => exp.test(x[key])));
         }
         this.setState({ filteredRows, paging: { ...this.state.paging, page: 1 } });
-    }
-
-    filter() {
-        return (
-            <div>
-                <input type="text" value={this.state.filter.searchTerm} onChange={this.onFilterInputChange} />
-                <button onClick={this.onFilterButtonClick}>Найти</button>
-            </div>
-        );
     }
 
     onRowClick(item) {
@@ -164,7 +156,7 @@ class Grid extends React.Component {
         const { columns } = this.props;
         return (
             <div>
-                {this.filter()}
+                <SearchPanel searchTerm={this.state.filter.searchTerm} onInputChange={this.onSearchInputChange} onButtonClick={this.onSearchButtonClick} />
                 <table>
                     <TableHead columns={columns} sortingState={this.state.sorting} onColumnHeaderClick={this.onColumnHeaderClick} />
                     <TableBody items={this.getPagedRows()} columns={columns} onRowClick={this.onRowClick} />
