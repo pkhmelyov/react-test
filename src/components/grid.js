@@ -9,13 +9,6 @@ class Grid extends React.Component {
     constructor(props) {
         super(props);
 
-        this.onColumnHeaderClick = this.onColumnHeaderClick.bind(this);
-        this.onRowClick = this.onRowClick.bind(this);
-        this.onPagingBackClick = this.onPagingBackClick.bind(this);
-        this.onPagingForwardClick = this.onPagingForwardClick.bind(this);
-        this.onSearchInputChange = this.onSearchInputChange.bind(this);
-        this.onSearchButtonClick = this.onSearchButtonClick.bind(this);
-
         this.state = {
             sorting: {
                 column: '',
@@ -47,9 +40,7 @@ class Grid extends React.Component {
         this.setState({ sorting });
     }
 
-    onColumnHeaderClick(key) {
-        return () => this.toggleSorting(key);
-    }
+    onColumnHeaderClick = key => () => this.toggleSorting(key);
 
     getFilteredRows() {
         let filteredRows = this.state.filteredRows;
@@ -93,27 +84,27 @@ class Grid extends React.Component {
         return this.getFilteredRows().length;
     }
 
-    onPagingBackClick() {
+    onPagingBackClick = () => {
         const paging = { ...this.state.paging };
         if(paging.page === 1) return;
         paging.page--;
         this.setState({ paging });
-    }
+    };
 
-    onPagingForwardClick() {
+    onPagingForwardClick = () => {
         const paging = { ...this.state.paging };
         if(paging.page * paging.size >= this.totalCount()) return;
         paging.page++;
         this.setState({ paging });
-    }
+    };
 
-    onSearchInputChange(e) {
+    onSearchInputChange = (e) => {
         const filter = { ...this.state.filter };
         filter.searchTerm = e.target.value;
         this.setState({ filter });
-    }
+    };
 
-    onSearchButtonClick() {
+    onSearchButtonClick = () => {
         const { searchTerm } = this.state.filter;
         const data = [ ...this.props.data ];
         let filteredRows;
@@ -125,13 +116,9 @@ class Grid extends React.Component {
             filteredRows = data.filter(x => columnKeys.some(key => exp.test(x[key])));
         }
         this.setState({ filteredRows, paging: { ...this.state.paging, page: 1 } });
-    }
+    };
 
-    onRowClick(item) {
-        return () => {
-            this.setState({ selectedItem: item });
-        };
-    }
+    onRowClick = item => () => this.setState({ selectedItem: item });
 
     itemDetails() {
         const selectedItem = this.state.selectedItem;
