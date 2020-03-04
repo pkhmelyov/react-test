@@ -4,6 +4,7 @@ import TableHead from './tableHead';
 import TableBody from './tableBody';
 import Pager from './pager';
 import SearchPanel from './searchPanel';
+import ItemDetails from './itemDetails';
 
 class Grid extends React.Component {
     constructor(props) {
@@ -120,25 +121,6 @@ class Grid extends React.Component {
 
     onRowClick = item => () => this.setState({ selectedItem: item });
 
-    itemDetails() {
-        const selectedItem = this.state.selectedItem;
-        if(selectedItem){
-            return (
-                <div>
-                Выбран пользователь <b>{selectedItem.firstName} {selectedItem.lastName}</b><br />
-                Описание:<br />
-                <textarea>
-                {selectedItem.description}
-                </textarea><br />
-                Адрес проживания: <b>{selectedItem.address.streetAddress}</b><br />
-                Город: <b>{selectedItem.address.city}</b><br />
-                Провинция/штат: <b>{selectedItem.address.state}</b><br />
-                Индекс: <b>{selectedItem.address.zip}</b>
-            </div>
-            );
-        }
-    }
-
     render() {
         const { columns } = this.props;
         return (
@@ -153,7 +135,7 @@ class Grid extends React.Component {
                     pagingState={this.state.paging}
                     onPagingBackClick={this.onPagingBackClick}
                     onPagingForwardClick={this.onPagingForwardClick} />
-                {this.itemDetails()}
+                <ItemDetails item={this.state.selectedItem} />
             </div>
         );
     }
