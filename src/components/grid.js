@@ -11,18 +11,50 @@ class Grid extends React.Component {
         super(props);
 
         this.state = {
+            data: [],
+            filteredRows: [],
             sorting: {
                 column: '',
                 asc: true
             },
             paging: {
-                size: 5,
+                size: 50,
                 page: 1
             },
             filter: {
                 searchTerm: ''
             }
         };
+    }
+
+    componentDidMount() {
+        this.getData().then(data => this.setData(data));
+    }
+
+    async getData() {
+        const { url } = this.props;
+        const response = await fetch(url);
+        const result = await response.json();
+        return result;
+    }
+
+    setData(data) {
+        this.setState({ data });
+        this.updateFilteredData();
+    }
+
+    updateFilteredData() {
+        const { searchTerm } = this.state.filter;
+        const data = [ ...this.state.data ];
+        let filteredRows;
+        if(!searchTerm) {
+            filteredRows = data;
+        } else {
+            const exp = new RegExp(searchTerm, "i");
+            const columnKeys = this.props.columns.map(x => x.key);
+            filteredRows = data.filter(x => columnKeys.some(key => exp.test(x[key])));
+        }
+        this.setState({ filteredRows, paging: { ...this.state.paging, page: 1 } });
     }
 
     toggleSorting(column) {
@@ -44,12 +76,7 @@ class Grid extends React.Component {
     onColumnHeaderClick = key => () => this.toggleSorting(key);
 
     getFilteredRows() {
-        let filteredRows = this.state.filteredRows;
-        if(!filteredRows) {
-            filteredRows = [ ...this.props.data ];
-            this.setState({ filteredRows });
-        }
-        return [ ...filteredRows ];
+        return [ ...this.state.filteredRows ];
     }
 
     getSortedRows() {
@@ -106,17 +133,7 @@ class Grid extends React.Component {
     };
 
     onSearchButtonClick = () => {
-        const { searchTerm } = this.state.filter;
-        const data = [ ...this.props.data ];
-        let filteredRows;
-        if(!searchTerm) {
-            filteredRows = data;
-        } else {
-            const exp = new RegExp(searchTerm, "i");
-            const columnKeys = this.props.columns.map(x => x.key);
-            filteredRows = data.filter(x => columnKeys.some(key => exp.test(x[key])));
-        }
-        this.setState({ filteredRows, paging: { ...this.state.paging, page: 1 } });
+        this.updateFilteredData();
     };
 
     onRowClick = item => () => this.setState({ selectedItem: item });

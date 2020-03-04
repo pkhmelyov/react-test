@@ -4,11 +4,11 @@ function TableBody({ items, columns, onRowClick }) {
     return (
         <tbody>
             {items.map(
-                item =>
-                    <tr key={item.id} onClick={onRowClick(item)}>
+                (item, index) =>
+                    <tr key={index} onClick={onRowClick(item)}>
                         {columns.map(
                             column =>
-                                <td key={`${item.id}-${column.key}`}>
+                                <td key={`${index}-${column.key}`}>
                                     {item[column.key]}
                                 </td>
                         )}
